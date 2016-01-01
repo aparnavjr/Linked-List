@@ -1,0 +1,37 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public bool IsPalindrome(ListNode head) {
+        
+        if(head == null)
+            return true;
+            
+        bool isPalindrome = helper(ref head,ref head);
+        
+        
+        return isPalindrome;
+    }
+    
+    public static bool helper(ref ListNode a, ref ListNode b)
+    {
+        if(b == null)
+            return true;
+            
+        bool isp = helper(ref a,ref b.next);
+        
+        if(isp == false)
+            return false;
+            
+        bool isp1 = (a.val == b.val);
+        
+        a = a.next;
+        
+        return isp1;
+    }
+}
