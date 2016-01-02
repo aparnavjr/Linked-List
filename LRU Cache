@@ -1,0 +1,81 @@
+public class LRUCache {
+    
+    public Dictionary<int,Node> entries;
+    int capacity;
+    public Node head;
+    public Node tail;
+    
+    public class Node{
+        
+        public Node next {get;set;}
+        public Node previous {get;set;}
+        public int Key {get;set;}
+        public int Value {get;set;}
+    }
+
+    public LRUCache(int capacity) {
+        
+        
+        if (capacity <= 0)
+            throw new ArgumentOutOfRangeException(
+                "capacity",
+                "Capacity should be greater than zero");
+        this.capacity = capacity;
+        entries = new Dictionary<int, Node>();
+        head = null; 
+        
+    }
+
+    public int Get(int key) {
+        
+        Node entry;
+        if(entries.TryGetValue(key,out entry) == false)
+            return -1;
+        MoveToHead(entry);
+        int value = entry.Value;
+        return value;
+        
+    }
+
+    public void Set(int key, int value) {
+        
+        Node entry;
+        if(entries.TryGetValue(key, out entry) == false)
+        {
+            entry = new Node {Key = key ,Value = value };
+            if(entries.Count == capacity)
+            {
+                entries.Remove(tail.Key);
+                tail = tail.previous;
+                if(tail != null) tail.next= null;
+                
+            }
+            
+            entries.Add(key,entry);
+        }
+        
+        entry.Value = value;
+        MoveToHead(entry);
+        if(tail == null) tail = head;
+        
+    }
+    
+    public void MoveToHead(Node entry)
+    {
+        if (entry == head || entry == null) return;
+ 
+        var next = entry.next;
+        var previous = entry.previous;
+ 
+        if (next != null) next.previous = entry.previous;
+        if (previous != null) previous.next = entry.next;
+ 
+        entry.previous = null;
+        entry.next = head;
+ 
+        if (head != null) head.previous = entry;
+        head = entry;
+ 
+        if (tail == entry) tail = previous;
+    }
+}
